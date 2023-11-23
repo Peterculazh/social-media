@@ -4,6 +4,6 @@
   "compilerOptions": {
     "sourceMap": false,
     "declaration": false,
-    "removeComments": true,
+    "removeComments": true
   }
 }

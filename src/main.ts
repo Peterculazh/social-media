@@ -9,10 +9,12 @@ import { Logger } from 'nestjs-pino';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   app.useLogger(app.get(Logger));
-  // app.useGlobalPipes(new ValidationPipe({
-  //   stopAtFirstError: true,
-  //   transform: true,
-  // }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      stopAtFirstError: true,
+      transform: true,
+    }),
+  );
   const config = new DocumentBuilder()
     .setTitle('Social-media API')
     .setDescription('The social-bedia API description')

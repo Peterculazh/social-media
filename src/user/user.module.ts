@@ -9,24 +9,30 @@ import { IUserRepository } from './domain/contracts/user/i.user.repository';
 import { UserRepository } from './infrastructure/user/user.repository';
 import { AuthUserInfrastructureMapper } from './infrastructure/auth/auth.mapper';
 import { UserInfrastructureMapper } from './infrastructure/user/user.mapper';
+import { ITokenService } from '../common/contracts/i.token.service';
+import { TokenService } from '../common/token/token.service';
 
 @Module({
-    providers: [
-        {
-            provide: IAuthService,
-            useClass: AuthService,
-        },
-        AuthUserInfrastructureMapper,
-        {
-            provide: IAuthRepository,
-            useClass: AuthRepository
-        },
-        UserInfrastructureMapper,
-        {
-            provide: IUserRepository,
-            useClass: UserRepository,
-        }
-    ],
-    controllers: [UserController, AuthController],
+  providers: [
+    {
+      provide: IAuthService,
+      useClass: AuthService,
+    },
+    AuthUserInfrastructureMapper,
+    {
+      provide: IAuthRepository,
+      useClass: AuthRepository,
+    },
+    UserInfrastructureMapper,
+    {
+      provide: IUserRepository,
+      useClass: UserRepository,
+    },
+    {
+      provide: ITokenService,
+      useClass: TokenService,
+    },
+  ],
+  controllers: [UserController, AuthController],
 })
-export class UserModule { }
+export class UserModule {}
