@@ -18,7 +18,7 @@ export class DomainExceptionFilter implements ExceptionFilter {
   catch(exception: DomainException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    let status = HttpStatus.BAD_REQUEST;
+    const status = HttpStatus.BAD_REQUEST;
     const errorResponse: IErrorResponse = {
       statusCode: status,
       message: exception.message,
