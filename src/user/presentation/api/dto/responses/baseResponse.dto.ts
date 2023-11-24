@@ -1,4 +1,4 @@
 export class BaseResponseDto {
-  success: boolean;
-  message?: string;
+    success: boolean;
+    message?: string;
 }

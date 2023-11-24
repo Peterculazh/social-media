@@ -15,68 +15,82 @@ import { ITokenService } from '../../common/contracts/i.token.service';
 
 @Injectable()
 export class AuthService implements IAuthService {
-  constructor(
-    @Inject(IAuthRepository) private readonly authRepository: IAuthRepository,
-    @Inject(IUserRepository) private readonly userRepository: IUserRepository,
-    @Inject(ITokenService) private readonly tokenService: ITokenService,
-  ) {}
+    constructor(
+        @Inject(IAuthRepository)
+        private readonly authRepository: IAuthRepository,
+        @Inject(IUserRepository)
+        private readonly userRepository: IUserRepository,
+        @Inject(ITokenService) private readonly tokenService: ITokenService,
+    ) {}
 
-  async registerUser(userInfo: UserRegistrationData): Promise<UserDto> {
-    if (!userInfo.email && !userInfo.nickname) {
-      throw new UserRegistrationBadParamsException(
-        'Email or nickname is required',
-      );
+    async registerUser(userInfo: UserRegistrationData): Promise<UserDto> {
+        if (!userInfo.email && !userInfo.nickname) {
+            throw new UserRegistrationBadParamsException(
+                'Email or nickname is required',
+            );
+        }
+
+        const newUser = await UserEntity.create(userInfo);
+
+        try {
+            const registeredUser = await this.authRepository.registerUser(
+                newUser,
+            );
+
+            return {
+                id: registeredUser.id,
+                email: registeredUser.email,
+                nickname: registeredUser.nickname,
+                createdAt: registeredUser.createdAt,
+                updatedAt: registeredUser.updatedAt,
+            };
+        } catch (error) {
+            if (error instanceof UniqueConstraintFailed) {
+                throw new UserRegistrationConflictException(
+                    'Email or nickname already in use',
+                );
+            }
+            throw error;
+        }
     }
 
-    const newUser = await UserEntity.create(userInfo);
+    async loginUser(userInfo: UserLoginData): Promise<UserLoginDto> {
+        if (!userInfo.email && !userInfo.password) {
+            throw new UserLoginBadParamsException(
+                'Email or password is required',
+            );
+        }
 
-    try {
-      const registeredUser = await this.authRepository.registerUser(newUser);
+        const user = await this.userRepository.findUser({
+            email: userInfo.email,
+        });
 
-      return {
-        id: registeredUser.id,
-        email: registeredUser.email,
-        nickname: registeredUser.nickname,
-        createdAt: registeredUser.createdAt,
-        updatedAt: registeredUser.updatedAt,
-      };
-    } catch (error) {
-      if (error instanceof UniqueConstraintFailed) {
-        throw new UserRegistrationConflictException(
-          'Email or nickname already in use',
+        if (!user) {
+            throw new UserLoginBadParamsException('Invalid credentials.');
+        }
+
+        const isPasswordValid = await user.comparePassword(userInfo.password);
+
+        if (!isPasswordValid) {
+            throw new UserLoginBadParamsException('Invalid credentials.');
+        }
+
+        const accessToken = await this.tokenService.generateAccessToken({
+            userId: user.id,
+            email: user.email,
+            nickname: user.nickname,
+        });
+        const refreshToken = await this.tokenService.generateRefreshToken(
+            user.id,
         );
-      }
-      throw error;
-    }
-  }
 
-  async loginUser(userInfo: UserLoginData): Promise<UserLoginDto> {
-    if (!userInfo.email && !userInfo.password) {
-      throw new UserLoginBadParamsException('Email or password is required');
+        return {
+            accessToken,
+            refreshToken,
+        };
     }
 
-    const user = await this.userRepository.findUser({ email: userInfo.email });
-
-    if (!user) {
-      throw new UserLoginBadParamsException('Invalid credentials.');
+    async logoutUser(token: string): Promise<void> {
+        await this.tokenService.revokeRefreshToken(token);
     }
-
-    const isPasswordValid = await user.comparePassword(userInfo.password);
-
-    if (!isPasswordValid) {
-      throw new UserLoginBadParamsException('Invalid credentials.');
-    }
-
-    const accessToken = await this.tokenService.generateAccessToken({
-      userId: user.id,
-      email: user.email,
-      nickname: user.nickname,
-    });
-    const refreshToken = await this.tokenService.generateRefreshToken(user.id);
-
-    return {
-      accessToken,
-      refreshToken,
-    };
-  }
 }

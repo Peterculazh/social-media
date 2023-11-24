@@ -1,12 +1,12 @@
 import { DomainException } from './Domain.exception';
 
 export class EntityNotFoundException extends DomainException {
-  constructor(message: string) {
-    super(message);
-    this.name = 'EntityNotFoundException';
+    constructor(message: string) {
+        super(message);
+        this.name = 'EntityNotFoundException';
 
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, EntityNotFoundException);
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, EntityNotFoundException);
+        }
     }
-  }
 }
