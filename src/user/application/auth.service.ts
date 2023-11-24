@@ -79,4 +79,8 @@ export class AuthService implements IAuthService {
       refreshToken,
     };
   }
+
+  async logoutUser(token: string): Promise<void> {
+    await this.tokenService.revokeRefreshToken(token);
+  }
 }

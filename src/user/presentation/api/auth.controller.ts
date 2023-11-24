@@ -8,13 +8,14 @@ import { BaseResponseDto } from './dto/responses/baseResponse.dto';
 import { LoginUserDto } from './dto/requests/auth/loginUser.dto';
 import { LoginResponseDto } from './dto/responses/auth/loginResponse.dto';
 import { UserLoginData } from '../../domain/values-objects/auth/user-login-data';
+import { LogoutUserDto } from './dto/requests/auth/logoutUser.dto';
 
 @UseFilters(DomainExceptionFilter)
 @Controller('auth')
 export class AuthController {
   constructor(
     @Inject(IAuthService) private readonly authService: IAuthService,
-  ) {}
+  ) { }
 
   @Post('registration')
   @ApiCreatedResponse({ type: BaseResponseDto })
@@ -34,6 +35,16 @@ export class AuthController {
     return {
       accessToken: result.accessToken,
       refreshToken: result.refreshToken,
+    };
+  }
+
+  @Post('logout')
+  @ApiAcceptedResponse({ type: BaseResponseDto })
+  async logout(@Body() dto: LogoutUserDto): Promise<BaseResponseDto> {
+    await this.authService.logoutUser(dto.refreshToken);
+    return {
+      success: true,
+      message: 'User logged out successfully',
     };
   }
 }
