@@ -13,26 +13,26 @@ import { ITokenService } from '../common/contracts/i.token.service';
 import { TokenService } from '../common/token/token.service';
 
 @Module({
-  providers: [
-    {
-      provide: IAuthService,
-      useClass: AuthService,
-    },
-    AuthUserInfrastructureMapper,
-    {
-      provide: IAuthRepository,
-      useClass: AuthRepository,
-    },
-    UserInfrastructureMapper,
-    {
-      provide: IUserRepository,
-      useClass: UserRepository,
-    },
-    {
-      provide: ITokenService,
-      useClass: TokenService,
-    },
-  ],
-  controllers: [UserController, AuthController],
+    providers: [
+        {
+            provide: IAuthService,
+            useClass: AuthService,
+        },
+        AuthUserInfrastructureMapper,
+        {
+            provide: IAuthRepository,
+            useClass: AuthRepository,
+        },
+        UserInfrastructureMapper,
+        {
+            provide: IUserRepository,
+            useClass: UserRepository,
+        },
+        {
+            provide: ITokenService,
+            useClass: TokenService,
+        },
+    ],
+    controllers: [UserController, AuthController],
 })
 export class UserModule {}

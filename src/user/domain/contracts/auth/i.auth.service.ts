@@ -4,9 +4,9 @@ import { UserDto } from '../dto/user.dto';
 import { UserLoginDto } from '../dto/userLogin.dto';
 
 export interface IAuthService {
-  registerUser(userInfo: UserRegistrationData): Promise<UserDto>;
-  loginUser(userInfo: UserLoginData): Promise<UserLoginDto>;
-  logoutUser(token: string): Promise<void>;
+    registerUser(userInfo: UserRegistrationData): Promise<UserDto>;
+    loginUser(userInfo: UserLoginData): Promise<UserLoginDto>;
+    logoutUser(token: string): Promise<void>;
 }
 
 export const IAuthService = Symbol('IAuthService');

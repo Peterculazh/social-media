@@ -13,38 +13,38 @@ import { LogoutUserDto } from './dto/requests/auth/logoutUser.dto';
 @UseFilters(DomainExceptionFilter)
 @Controller('auth')
 export class AuthController {
-  constructor(
-    @Inject(IAuthService) private readonly authService: IAuthService,
-  ) { }
+    constructor(
+        @Inject(IAuthService) private readonly authService: IAuthService,
+    ) {}
 
-  @Post('registration')
-  @ApiCreatedResponse({ type: BaseResponseDto })
-  async registration(@Body() dto: RegisterUserDto): Promise<BaseResponseDto> {
-    await this.authService.registerUser(new UserRegistrationData(dto));
-    return {
-      success: true,
-      message: 'User registered successfully',
-    };
-  }
+    @Post('registration')
+    @ApiCreatedResponse({ type: BaseResponseDto })
+    async registration(@Body() dto: RegisterUserDto): Promise<BaseResponseDto> {
+        await this.authService.registerUser(new UserRegistrationData(dto));
+        return {
+            success: true,
+            message: 'User registered successfully',
+        };
+    }
 
-  @Post('login')
-  @ApiAcceptedResponse({ type: LoginResponseDto })
-  async login(@Body() dto: LoginUserDto): Promise<LoginResponseDto> {
-    const result = await this.authService.loginUser(new UserLoginData(dto));
+    @Post('login')
+    @ApiAcceptedResponse({ type: LoginResponseDto })
+    async login(@Body() dto: LoginUserDto): Promise<LoginResponseDto> {
+        const result = await this.authService.loginUser(new UserLoginData(dto));
 
-    return {
-      accessToken: result.accessToken,
-      refreshToken: result.refreshToken,
-    };
-  }
+        return {
+            accessToken: result.accessToken,
+            refreshToken: result.refreshToken,
+        };
+    }
 
-  @Post('logout')
-  @ApiAcceptedResponse({ type: BaseResponseDto })
-  async logout(@Body() dto: LogoutUserDto): Promise<BaseResponseDto> {
-    await this.authService.logoutUser(dto.refreshToken);
-    return {
-      success: true,
-      message: 'User logged out successfully',
-    };
-  }
+    @Post('logout')
+    @ApiAcceptedResponse({ type: BaseResponseDto })
+    async logout(@Body() dto: LogoutUserDto): Promise<BaseResponseDto> {
+        await this.authService.logoutUser(dto.refreshToken);
+        return {
+            success: true,
+            message: 'User logged out successfully',
+        };
+    }
 }

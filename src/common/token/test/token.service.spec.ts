@@ -8,59 +8,59 @@ import { RedisModule, getRedisToken } from '@liaoliaots/nestjs-redis';
 import { redisConfig } from '../../configs';
 
 describe('TokenService', () => {
-  let service: ITokenService;
+    let service: ITokenService;
 
-  let mockRedis: Partial<Redis>;
+    let mockRedis: Partial<Redis>;
 
-  beforeEach(async () => {
-    mockRedis = {
-      set: jest.fn(),
-      get: jest.fn(),
-      del: jest.fn(),
-    };
+    beforeEach(async () => {
+        mockRedis = {
+            set: jest.fn(),
+            get: jest.fn(),
+            del: jest.fn(),
+        };
 
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        {
-          provide: ITokenService,
-          useClass: TokenService,
-        },
-        {
-          provide: getRedisToken('default'),
-          useValue: mockRedis,
-        },
-      ],
-      imports: [
-        JwtModule.register({
-          secret: process.env.JWT_SECRET,
-          signOptions: { expiresIn: '60m' },
-        }),
-      ],
-    }).compile();
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [
+                {
+                    provide: ITokenService,
+                    useClass: TokenService,
+                },
+                {
+                    provide: getRedisToken('default'),
+                    useValue: mockRedis,
+                },
+            ],
+            imports: [
+                JwtModule.register({
+                    secret: process.env.JWT_SECRET,
+                    signOptions: { expiresIn: '60m' },
+                }),
+            ],
+        }).compile();
 
-    service = module.get<ITokenService>(ITokenService);
-  });
+        service = module.get<ITokenService>(ITokenService);
+    });
 
-  it('Should be defined', () => {
-    expect(service).toBeDefined();
-  });
+    it('Should be defined', () => {
+        expect(service).toBeDefined();
+    });
 
-  it(`Should generate access token`, async () => {
-    const payload = {
-      userId: `1`,
-      email: `test@gmail.com`,
-      nickname: `test`,
-    };
+    it(`Should generate access token`, async () => {
+        const payload = {
+            userId: `1`,
+            email: `test@gmail.com`,
+            nickname: `test`,
+        };
 
-    const accessToken = await service.generateAccessToken(payload);
+        const accessToken = await service.generateAccessToken(payload);
 
-    expect(accessToken).toBeDefined();
-  });
+        expect(accessToken).toBeDefined();
+    });
 
-  it(`Should generate refresh token`, async () => {
-    const userId = `1`;
-    const refreshToken = await service.generateRefreshToken(userId);
+    it(`Should generate refresh token`, async () => {
+        const userId = `1`;
+        const refreshToken = await service.generateRefreshToken(userId);
 
-    expect(refreshToken).toBeDefined();
-  });
+        expect(refreshToken).toBeDefined();
+    });
 });

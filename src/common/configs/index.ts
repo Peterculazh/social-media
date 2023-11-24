@@ -6,13 +6,13 @@ import { IApplicationConfig } from './application';
 import * as applicationConfigs from './application';
 
 export const redisConfig: IRedisConfig = {
-  ...redisConfigs[process.env.NODE_ENV],
+    ...redisConfigs[process.env.NODE_ENV],
 };
 
 export const cryptConfig: ICryptConfig = {
-  ...cryptConfigs[process.env.NODE_ENV],
+    ...cryptConfigs[process.env.NODE_ENV],
 };
 
 export const applicationConfig: IApplicationConfig = {
-  ...applicationConfigs[process.env.NODE_ENV],
+    ...applicationConfigs[process.env.NODE_ENV],
 };
