@@ -66,13 +66,11 @@ describe('NEGATIVE: AuthService', () => {
     });
 
     it(`Should throw error due of already existing user`, async () => {
-        mockAuthRepository.registerUser = jest
-            .fn()
-            .mockImplementation((_user) => {
-                throw new UniqueConstraintFailed(
-                    'Email or nickname already in use',
-                );
-            });
+        mockAuthRepository.registerUser = jest.fn().mockImplementation(() => {
+            throw new UniqueConstraintFailed(
+                'Email or nickname already in use',
+            );
+        });
 
         const testUser = new UserRegistrationData({
             email: 'test@gmail.com',

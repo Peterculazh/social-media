@@ -68,7 +68,7 @@ describe('POSITIVE: AuthService', () => {
             );
         mockUserRepository.findUser = jest
             .fn()
-            .mockImplementation((_user) => Promise.resolve(null));
+            .mockImplementation(() => Promise.resolve(null));
 
         const testUser = new UserRegistrationData({
             email: 'test@gmail.com',

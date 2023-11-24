@@ -24,7 +24,7 @@ import { TokenService } from './common/token/token.service';
                     process.env.NODE_ENV !== 'production'
                         ? { target: 'pino-pretty' }
                         : undefined,
-                customLogLevel: function (req, res, error) {
+                customLogLevel: function (req, res) {
                     if (res.statusCode === 500) {
                         // Log only 500 internal server error responses
                         return 'error';

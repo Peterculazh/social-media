@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-import { exec, execSync } from 'child_process';
+import { exec } from 'child_process';
 import { Client } from 'pg';
 
 export class TestDB {

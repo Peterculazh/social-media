@@ -4,8 +4,7 @@ import { ITokenService } from '../../contracts/i.token.service';
 import { TokenService } from '../token.service';
 import { JwtModule } from '@nestjs/jwt';
 import Redis from 'ioredis';
-import { RedisModule, getRedisToken } from '@liaoliaots/nestjs-redis';
-import { redisConfig } from '../../configs';
+import { getRedisToken } from '@liaoliaots/nestjs-redis';
 
 describe('TokenService', () => {
     let service: ITokenService;
