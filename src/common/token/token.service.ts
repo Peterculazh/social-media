@@ -5,6 +5,7 @@ import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
+import { IUserToken } from './interfaces';
 
 @Injectable()
 export class TokenService implements ITokenService {
@@ -13,11 +14,7 @@ export class TokenService implements ITokenService {
         private readonly jwtService: JwtService,
     ) {}
 
-    async generateAccessToken(payload: {
-        userId: string;
-        email: string;
-        nickname: string;
-    }): Promise<string> {
+    async generateAccessToken(payload: IUserToken): Promise<string> {
         return await this.jwtService.signAsync(payload, {
             expiresIn: applicationConfig.tokens.accessTokenTTL,
         });

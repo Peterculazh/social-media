@@ -17,6 +17,20 @@ datasource db {
 }
 
 //
+// post.prisma
+//
+
+model Post {
+  id        String   @id @db.Uuid
+  title     String
+  content   String   @unique
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String   @db.Uuid
+  createdAt DateTime @db.Timestamp(6)
+  updatedAt DateTime @db.Timestamp(6)
+}
+
+//
 // user.prisma
 //
 
@@ -27,4 +41,5 @@ model User {
   password  String
   createdAt DateTime @db.Timestamp(6)
   updatedAt DateTime @db.Timestamp(6)
+  posts     Post[]
 }

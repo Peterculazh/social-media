@@ -20,6 +20,7 @@ async function bootstrap() {
         .setDescription('The social-bedia API description')
         .setVersion('0.01')
         .addTag('social')
+        .addBearerAuth()
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);

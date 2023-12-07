@@ -1,3 +1,5 @@
+import { Post } from "../../../post/infrastructure/models/post.prisma"
+
 model User {
     id        String   @id @db.Uuid
     email     String   @unique
@@ -5,4 +7,5 @@ model User {
     password  String
     createdAt DateTime @db.Timestamp(6)
     updatedAt DateTime @db.Timestamp(6)
+    posts     Post[]
 }

@@ -7,6 +7,8 @@ import { LoggerModule } from 'nestjs-pino';
 import { JwtModule } from '@nestjs/jwt';
 import { ITokenService } from './common/contracts/i.token.service';
 import { TokenService } from './common/token/token.service';
+import { PostModule } from './post/post.module';
+import { AuthGuard } from './common/presentation/api/guards/auth.guard';
 
 @Module({
     imports: [
@@ -16,7 +18,6 @@ import { TokenService } from './common/token/token.service';
         PrismaModule.forRoot({
             isGlobal: true,
         }),
-        UserModule,
         LoggerModule.forRoot({
             pinoHttp: {
                 level: process.env.NODE_ENV !== 'production' ? 'debug' : 'warn',
@@ -35,15 +36,17 @@ import { TokenService } from './common/token/token.service';
         }),
         JwtModule.register({
             secret: process.env.JWT_SECRET,
-            signOptions: { expiresIn: '60m' },
             global: true,
         }),
+        UserModule,
+        PostModule,
     ],
     providers: [
         {
             provide: ITokenService,
             useClass: TokenService,
         },
+        AuthGuard,
     ],
     exports: [
         {

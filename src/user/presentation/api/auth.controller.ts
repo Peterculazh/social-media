@@ -7,7 +7,7 @@ import {
     ApiBadRequestResponse,
     ApiConflictResponse,
     ApiCreatedResponse,
-    refs,
+    ApiTags,
 } from '@nestjs/swagger';
 import { DomainExceptionFilter } from './exceptions-filter/auth.exceptions.filter';
 import { BaseResponseDto } from './dto/responses/baseResponse.dto';
@@ -16,12 +16,11 @@ import { LoginResponseDto } from './dto/responses/auth/loginResponse.dto';
 import { UserLoginData } from '../../domain/values-objects/auth/user-login-data';
 import { LogoutUserDto } from './dto/requests/auth/logoutUser.dto';
 import {
-    InvalidUserValueObjectParamsException,
-    UserLoginBadParamsException,
-    UserRegistrationBadParamsException,
-    UserRegistrationConflictException,
-} from '../../domain/exceptions';
+    BadRequestDto,
+    ConflictDto,
+} from '../../../common/presentation/api/dto';
 
+@ApiTags(`Auth`)
 @UseFilters(DomainExceptionFilter)
 @Controller('auth')
 export class AuthController {
@@ -31,15 +30,8 @@ export class AuthController {
 
     @Post('registration')
     @ApiCreatedResponse({ type: BaseResponseDto })
-    @ApiBadRequestResponse({
-        schema: {
-            anyOf: refs(
-                UserRegistrationBadParamsException,
-                InvalidUserValueObjectParamsException,
-            ),
-        },
-    })
-    @ApiConflictResponse({ type: UserRegistrationConflictException })
+    @ApiBadRequestResponse({ type: BadRequestDto })
+    @ApiConflictResponse({ type: ConflictDto })
     async registration(@Body() dto: RegisterUserDto): Promise<BaseResponseDto> {
         await this.authService.registerUser(new UserRegistrationData(dto));
         return {
@@ -50,7 +42,7 @@ export class AuthController {
 
     @Post('login')
     @ApiAcceptedResponse({ type: LoginResponseDto })
-    @ApiBadRequestResponse({ type: UserLoginBadParamsException })
+    @ApiBadRequestResponse({ type: BadRequestDto })
     async login(@Body() dto: LoginUserDto): Promise<LoginResponseDto> {
         const result = await this.authService.loginUser(new UserLoginData(dto));
 
