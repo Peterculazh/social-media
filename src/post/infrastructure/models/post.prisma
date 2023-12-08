@@ -1,0 +1,11 @@
+import {User} from '../../../user/infrastructure/models/user.prisma'
+
+model Post {
+    id        String   @id @db.Uuid
+    title     String
+    content   String   @unique
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  String   @db.Uuid
+    createdAt DateTime @db.Timestamp(6)
+    updatedAt DateTime @db.Timestamp(6)
+}

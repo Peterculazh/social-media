@@ -11,6 +11,7 @@ import {
     UserLoginBadParamsException,
     UserRegistrationConflictException,
     UserRegistrationBadParamsException,
+    InvalidUserCreationParamsException,
 } from '../../../domain/exceptions';
 
 @Catch(DomainException)
@@ -27,7 +28,8 @@ export class DomainExceptionFilter implements ExceptionFilter {
         switch (true) {
             case exception instanceof UserRegistrationBadParamsException ||
                 exception instanceof InvalidUserValueObjectParamsException ||
-                exception instanceof UserLoginBadParamsException:
+                exception instanceof UserLoginBadParamsException ||
+                exception instanceof InvalidUserCreationParamsException:
                 errorResponse.statusCode = HttpStatus.BAD_REQUEST;
                 break;
             case exception instanceof UserRegistrationConflictException:
